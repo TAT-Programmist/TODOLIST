@@ -1,4 +1,3 @@
-import { getTeamList } from "../../../../../server/controllers/userController";
 import { apiSlice } from "../apiSlice"
 
 const USER_URL = "/user"
@@ -44,7 +43,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export const {
+export const{
     useUpdateUserMutation,
     useGetTeamListQuery,
     useDeleteUserMutation,

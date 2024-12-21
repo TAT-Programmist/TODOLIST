@@ -7,7 +7,7 @@ import { getInitials } from "../utils";
 import clsx from "clsx";
 import ConfirmatioDialog, { UserAction } from "../components/Dialogs";
 import AddUser from "../components/AddUser";
-import { useDeleteUserMutation, useGetTeamListQuery, useUserActionMutation } from "../redux/slices/api/userApiSliсe";
+import { useDeleteUserMutation, useGetTeamListQuery, useUserActionMutation } from "../redux/slices/api/userApiSliсe"; 
 import { toast } from "sonner";
 
 const Users = () => {
@@ -17,6 +17,15 @@ const Users = () => {
   const [selected, setSelected] = useState(null);
 
   const{ data, isLoading, refetch } = useGetTeamListQuery();
+  // if (isLoading) {
+  //   return <div>Загрузка...</div>; // Индикатор загрузки
+  // }
+
+  // if (error) {
+  //   console.error("Ошибка загрузки данных:", error);
+  //   return <div>Произошла ошибка при загрузке данных.</div>; // Сообщение об ошибке
+  // }
+  // // console.log(data, error);
   const[deleteUser] = useDeleteUserMutation();
   const[userAction] = useUserActionMutation();
 
@@ -25,7 +34,7 @@ const Users = () => {
       const result = await userAction({
         isActive: !selected.isActive,
         id: selected?._id,
-      });
+      }).unwrap();
 
       refetch();
       toast.success(result.data.message);
@@ -34,14 +43,14 @@ const Users = () => {
         setOpenAction(false);
       }, 500);
     } catch (error) {
-      console.log(err);
-      toast.error(err?.data?.message || err.error);
+      console.log(error);
+      toast.error(error?.data?.message || err.error);
     }
   };
 
   const deleteHandler = async() => {
     try {
-      const result = await deleteUser(selected);
+      const result = await deleteUser(selected?._id).unwrap();
 
       refetch();
       toast.success(result.data.message);
@@ -50,8 +59,8 @@ const Users = () => {
         setOpenDialog(false);
       }, 500);
     } catch (error) {
-       console.log(err);
-       toast.error(err?.data?.message || err.error);
+       console.log(error);
+       toast.error(error?.data?.message || error.error);
     }
   };
 
@@ -117,7 +126,7 @@ const Users = () => {
           type='button'
           onClick={() => editClick(user)}
         />
-
+  
         <Button
           className='text-red-700 hover:text-red-500 font-semibold sm:px-0'
           label='Delete'
@@ -147,7 +156,7 @@ const Users = () => {
               <TableHeader />
               <tbody>
                 {data?.map((user, index) => (
-                  <TableRow key={index} user={user} />
+                  <TableRow key={user._id} user={user} />
                 ))}
               </tbody>
             </table>

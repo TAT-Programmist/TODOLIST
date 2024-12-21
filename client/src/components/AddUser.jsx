@@ -28,8 +28,8 @@ const AddUser = ({ open, setOpen, userData }) => {
 
   const handleOnSubmit = async (data) => {
     try {
-      if (userData){ 
-        const result = await updateUser(data).unwrap()
+      if (userData) { 
+        const result = await updateUser(data).unwrap();
 
       toast.success(result?.message)
       
@@ -39,7 +39,7 @@ const AddUser = ({ open, setOpen, userData }) => {
       } else {
         const result = await addNewUser({
           ...data, 
-          password: data.email,
+          password: data.email
         }).unwrap();
         
         toast.success("New User added successfully");
